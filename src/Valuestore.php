@@ -16,7 +16,7 @@ class Valuestore implements ArrayAccess, Countable
      *
      * @return $this
      */
-    public static function make(string $fileName, array $values = null)
+    public static function make($fileName, array $values = null)
     {
         $valuestore = (new static())->setFileName($fileName);
 
@@ -38,7 +38,7 @@ class Valuestore implements ArrayAccess, Countable
      *
      * @return $this
      */
-    protected function setFileName(string $fileName)
+    protected function setFileName($fileName)
     {
         $this->fileName = $fileName;
 
@@ -80,7 +80,7 @@ class Valuestore implements ArrayAccess, Countable
      *
      * @return $this
      */
-    public function push(string $name, $pushValue)
+    public function push($name, $pushValue)
     {
         if (! is_array($pushValue)) {
             $pushValue = [$pushValue];
@@ -115,7 +115,7 @@ class Valuestore implements ArrayAccess, Countable
      *
      * @return $this
      */
-    public function prepend(string $name, $prependValue)
+    public function prepend($name, $prependValue)
     {
         if (! is_array($prependValue)) {
             $prependValue = [$prependValue];
@@ -150,7 +150,7 @@ class Valuestore implements ArrayAccess, Countable
      *
      * @return null|string
      */
-    public function get(string $name, $default = null)
+    public function get($name, $default = null)
     {
         if (! array_key_exists($name, $this->all())) {
             return $default;
@@ -162,7 +162,7 @@ class Valuestore implements ArrayAccess, Countable
     /*
      * Determine if the store has a value for the given name.
      */
-    public function has(string $name) : bool
+    public function has($name)
     {
         return array_key_exists($name, $this->all());
     }
@@ -172,7 +172,7 @@ class Valuestore implements ArrayAccess, Countable
      *
      * @return array
      */
-    public function all() : array
+    public function all()
     {
         if (! file_exists($this->fileName)) {
             return [];
@@ -188,7 +188,7 @@ class Valuestore implements ArrayAccess, Countable
      *
      * @return array
      */
-    public function allStartingWith(string $startingWith = '') : array
+    public function allStartingWith($startingWith = '')
     {
         $values = $this->all();
 
@@ -206,7 +206,7 @@ class Valuestore implements ArrayAccess, Countable
      *
      * @return $this
      */
-    public function forget(string $key)
+    public function forget($key)
     {
         $newContent = $this->all();
 
@@ -234,7 +234,7 @@ class Valuestore implements ArrayAccess, Countable
      *
      * @return $this
      */
-    public function flushStartingWith(string $startingWith = '')
+    public function flushStartingWith($startingWith = '')
     {
         $newContent = [];
 
@@ -252,7 +252,7 @@ class Valuestore implements ArrayAccess, Countable
      *
      * @return null|string
      */
-    public function pull(string $name)
+    public function pull($name)
     {
         $value = $this->get($name);
 
@@ -269,9 +269,9 @@ class Valuestore implements ArrayAccess, Countable
      *
      * @return int|null|string
      */
-    public function increment(string $name, int $by = 1)
+    public function increment($name, $by = 1)
     {
-        $currentValue = $this->get($name) ?? 0;
+        $currentValue = empty($this->get($name)) ? 0 : $this->get($name);
 
         $newValue = $currentValue + $by;
 
@@ -288,7 +288,7 @@ class Valuestore implements ArrayAccess, Countable
      *
      * @return int|null|string
      */
-    public function decrement(string $name, int $by = 1)
+    public function decrement($name, $by = 1)
     {
         return $this->increment($name, $by * -1);
     }
@@ -358,21 +358,21 @@ class Valuestore implements ArrayAccess, Countable
         return count($this->all());
     }
 
-    protected function filterKeysStartingWith(array $values, string $startsWith) : array
+    protected function filterKeysStartingWith(array $values, $startsWith)
     {
         return array_filter($values, function ($key) use ($startsWith) {
             return $this->startsWith($key, $startsWith);
         }, ARRAY_FILTER_USE_KEY);
     }
 
-    protected function filterKeysNotStartingWith(array $values, string $startsWith) : array
+    protected function filterKeysNotStartingWith(array $values, $startsWith)
     {
         return array_filter($values, function ($key) use ($startsWith) {
             return ! $this->startsWith($key, $startsWith);
         }, ARRAY_FILTER_USE_KEY);
     }
 
-    protected function startsWith(string $haystack, string $needle) : bool
+    protected function startsWith($haystack, $needle)
     {
         return substr($haystack, 0, strlen($needle)) === $needle;
     }

@@ -9,6 +9,8 @@
 
 This package makes it easy to store and retrieve some values. Stores values are saved as a json in a file.
 
+# THis is a fork allowing to use PHP 5.6
+
 It can be used like this:
 
 ```php
